@@ -1,5 +1,5 @@
 "use strict";
-import d3 from 'd3';
+import * as d3 from 'd3';
 import { PriorityQueue } from 'js-priority-queue';
 
 function randomVector(scale: number) {
@@ -1121,7 +1121,7 @@ export function doMap(svg, params = defaultParams) {
   drawMap(svg, render);
 }
 
-const defaultParams = {
+export const defaultParams = {
   extent: defaultExtent,
   generator: generateCoast,
   npts: 16384,
@@ -1142,7 +1142,7 @@ function makeRandomLanguage() {
   return 'Pig Latin'
 }
 
-function addSVG(div) {
+export function addSVG(div) {
   return div.insert("svg", ":first-child")
     .attr("height", 400)
     .attr("width", 400)
@@ -1151,9 +1151,9 @@ function addSVG(div) {
 const meshDiv = d3.select("div#mesh");
 const meshSVG = addSVG(meshDiv);
 
-let meshPts = null;
+const meshPts = null;
 let meshVxs = null;
-let meshDual = false;
+const meshDual = false;
 
 function meshDraw() {
   if (meshDual && !meshVxs) {
@@ -1162,39 +1162,10 @@ function meshDraw() {
   visualizePoints(meshSVG, meshDual ? meshVxs : meshPts);
 }
 
-meshDiv.append("button")
-  .text("Generate random points")
-  .on("click", function () {
-    meshDual = false;
-    meshVxs = null;
-    meshPts = generatePoints(256);
-    meshDraw();
-  });
-
-meshDiv.append("button")
-  .text("Improve points")
-  .on("click", function () {
-    meshPts = improvePoints(meshPts);
-    meshVxs = null;
-    meshDraw();
-  });
-
-const vorBut = meshDiv.append("button")
-  .text("Show Voronoi corners")
-  .on("click", function () {
-    meshDual = !meshDual;
-    if (meshDual) {
-      vorBut.text("Show original points");
-    } else {
-      vorBut.text("Show Voronoi corners");
-    }
-    meshDraw();
-  });
-
 const primDiv = d3.select("div#prim");
 const primSVG = addSVG(primDiv);
 
-let primH = zero(generateGoodMesh(4096));
+const primH = zero(generateGoodMesh(4096));
 
 function primDraw() {
   visualizeVoronoi(primSVG, primH, -1, 1);
@@ -1202,69 +1173,6 @@ function primDraw() {
 }
 
 primDraw();
-
-primDiv.append("button")
-  .text("Reset to flat")
-  .on("click", function () {
-    primH = zero(primH.mesh);
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Add random slope")
-  .on("click", function () {
-    primH = add(primH, slope(primH.mesh, randomVector(4)));
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Add cone")
-  .on("click", function () {
-    primH = add(primH, cone(primH.mesh, -0.5));
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Add inverted cone")
-  .on("click", function () {
-    primH = add(primH, cone(primH.mesh, 0.5));
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Add five blobs")
-  .on("click", function () {
-    primH = add(primH, mountains(primH.mesh, 5));
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Normalize heightmap")
-  .on("click", function () {
-    primH = normalize(primH);
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Round hills")
-  .on("click", function () {
-    primH = peaky(primH);
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Relax")
-  .on("click", function () {
-    primH = relax(primH);
-    primDraw();
-  });
-
-primDiv.append("button")
-  .text("Set sea level to median")
-  .on("click", function () {
-    primH = setSeaLevel(primH, 0.5);
-    primDraw();
-  });
 
 const erodeDiv = d3.select("div#erode");
 const erodeSVG = addSVG(erodeDiv);
@@ -1280,8 +1188,8 @@ function generateUneroded() {
   return h;
 }
 
-let erodeH = primH;
-let erodeViewErosion = false;
+const erodeH = primH;
+const erodeViewErosion = false;
 
 function erodeDraw() {
   if (erodeViewErosion) {
@@ -1292,63 +1200,14 @@ function erodeDraw() {
   drawPaths(erodeSVG, "coast", contour(erodeH, 0));
 }
 
-erodeDiv.append("button")
-  .text("Generate random heightmap")
-  .on("click", function () {
-    erodeH = generateUneroded();
-    erodeDraw();
-  });
-
-erodeDiv.append("button")
-  .text("Copy heightmap from above")
-  .on("click", function () {
-    erodeH = primH;
-    erodeDraw();
-  });
-
-erodeDiv.append("button")
-  .text("Erode")
-  .on("click", function () {
-    erodeH = doErosion(erodeH, 0.1);
-    erodeDraw();
-  });
-
-erodeDiv.append("button")
-  .text("Set sea level to median")
-  .on("click", function () {
-    erodeH = setSeaLevel(erodeH, 0.5);
-    erodeDraw();
-  });
-
-
-erodeDiv.append("button")
-  .text("Clean coastlines")
-  .on("click", function () {
-    erodeH = cleanCoast(erodeH, 1);
-    erodeH = fillSinks(erodeH);
-    erodeDraw();
-  });
-
-const erodeBut = erodeDiv.append("button")
-  .text("Show erosion rate")
-  .on("click", function () {
-    erodeViewErosion = !erodeViewErosion;
-    if (erodeViewErosion) {
-      erodeBut.text("Show heightmap");
-    } else {
-      erodeBut.text("Show erosion rate");
-    }
-    erodeDraw();
-  });
-
 const physDiv = d3.select("div#phys");
 const physSVG = addSVG(physDiv);
-let physH = erodeH;
+const physH = erodeH;
 
-let physViewCoast = false;
-let physViewRivers = false;
-let physViewSlope = false;
-let physViewHeight = true;
+const physViewCoast = false;
+const physViewRivers = false;
+const physViewSlope = false;
+const physViewHeight = true;
 
 function physDraw() {
   if (physViewHeight) {
@@ -1372,58 +1231,11 @@ function physDraw() {
     visualizeSlopes(physSVG, { h: zero(physH.mesh) });
   }
 }
-physDiv.append("button")
-  .text("Generate random heightmap")
-  .on("click", function () {
-    physH = generateCoast({ npts: 4096, extent: defaultExtent });
-    physDraw();
-  });
-
-physDiv.append("button")
-  .text("Copy heightmap from above")
-  .on("click", function () {
-    physH = erodeH;
-    physDraw();
-  });
-
-const physCoastBut = physDiv.append("button")
-  .text("Show coastline")
-  .on("click", function () {
-    physViewCoast = !physViewCoast;
-    physCoastBut.text(physViewCoast ? "Hide coastline" : "Show coastline");
-    physDraw();
-  });
-
-const physRiverBut = physDiv.append("button")
-  .text("Show rivers")
-  .on("click", function () {
-    physViewRivers = !physViewRivers;
-    physRiverBut.text(physViewRivers ? "Hide rivers" : "Show rivers");
-    physDraw();
-  });
-
-
-const physSlopeBut = physDiv.append("button")
-  .text("Show slope shading")
-  .on("click", function () {
-    physViewSlope = !physViewSlope;
-    physSlopeBut.text(physViewSlope ? "Hide slope shading" : "Show slope shading");
-    physDraw();
-  });
-
-
-const physHeightBut = physDiv.append("button")
-  .text("Hide heightmap")
-  .on("click", function () {
-    physViewHeight = !physViewHeight;
-    physHeightBut.text(physViewHeight ? "Hide heightmap" : "Show heightmap");
-    physDraw();
-  });
 
 const cityDiv = d3.select("div#city");
 const citySVG = addSVG(cityDiv);
 
-let cityViewScore = true;
+const cityViewScore = true;
 
 function newCityRender(h) {
   h = h || generateCoast({ npts: 4096, extent: defaultExtent });
@@ -1433,7 +1245,7 @@ function newCityRender(h) {
     cities: []
   };
 }
-let cityRender = newCityRender(physH);
+const cityRender = newCityRender(physH);
 function cityDraw() {
   cityRender.terr = getTerritories(cityRender);
   if (cityViewScore) {
@@ -1449,34 +1261,6 @@ function cityDraw() {
   visualizeCities(citySVG, cityRender);
 }
 
-cityDiv.append("button")
-  .text("Generate random heightmap")
-  .on("click", function () {
-    cityRender = newCityRender();
-    cityDraw();
-  });
-
-cityDiv.append("button")
-  .text("Copy heightmap from above")
-  .on("click", function () {
-    cityRender = newCityRender(physH);
-    cityDraw();
-  });
-
-cityDiv.append("button")
-  .text("Add new city")
-  .on("click", function () {
-    placeCity(cityRender);
-    cityDraw();
-  });
-
-const cityViewBut = cityDiv.append("button")
-  .text("Show territories")
-  .on("click", function () {
-    cityViewScore = !cityViewScore;
-    cityViewBut.text(cityViewScore ? "Show territories" : "Show city location scores");
-    cityDraw();
-  });
 
 const finalDiv = d3.select("div#final");
 const finalSVG = addSVG(finalDiv);
