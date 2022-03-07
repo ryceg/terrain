@@ -1,29 +1,40 @@
-# Fantasy map generator
+# create-svelte
 
-This is code for generating fantasy maps, using the algorithm behind [@unchartedatlas][uncharted]. For more details, see [these notes][notes].
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-## Dependencies
+## Creating a project
 
-This code depends on the following:
+If you're seeing this, you've probably already done this step. Congrats!
 
- * [D3.js][d3] (tested with version 4.2.0)
- * Adam Hooper's [js-priority-queue][priority]
- * My [language generation code][language]
+```bash
+# create a new project in the current directory
+npm init svelte@next
 
-## Support, licensing, ongoing development
+# create a new project in my-app
+npm init svelte@next my-app
+```
 
-This project is, from my perspective, finished.
+> Note: the `@next` is temporary
 
-The code is available under the [MIT license][license], so you can fork it,
-improve it, learn from it, build upon it. However, I have no interest in
-maintaining it as an ongoing open source project, nor in providing support for
-it. Pull requests will be either ignored or closed.
+## Developing
 
-If you do make something interesting with this code, please do still let me know! I'm sorry that I can't provide any support, but I am still genuinely interested in seeing creative applications of the code.
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-[uncharted]: https://twitter.com/unchartedatlas
-[notes]: https://mewo2.com/notes/terrain/
-[language]: https://github.com/mewo2/naming-language/
-[priority]: https://github.com/adamhooper/js-priority-queue
-[d3]: https://d3js.org/
-[license]: https://github.com/mewo2/terrain/blob/master/LICENSE.md
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
