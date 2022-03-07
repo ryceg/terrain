@@ -33,6 +33,7 @@
   "type": "module",
   "dependencies": {
     "d3": "^7.3.0",
+    "d3-voronoi": "^1.1.4",
     "js-priority-queue": "^0.1.5"
   }
 }

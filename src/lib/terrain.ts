@@ -1,5 +1,6 @@
 "use strict";
 import * as d3 from 'd3';
+import { voronoi as d3_voronoi } from 'd3-voronoi';
 import { PriorityQueue } from 'js-priority-queue';
 
 function randomVector(scale: number) {
@@ -148,7 +149,7 @@ function generateGoodPoints(n: number, extent = defaultExtent) {
 function voronoi(pts: Pts, extent = defaultExtent) {
   const w = extent.width / 2;
   const h = extent.height / 2;
-  return d3.voronoi().extent([[-w, -h], [w, h]])(pts);
+  return d3_voronoi().extent([[-w, -h], [w, h]])(pts);
 }
 
 function makeMesh(pts: Pts, extent = defaultExtent): Mesh {
