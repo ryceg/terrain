@@ -8,7 +8,7 @@ export const defaultParams = {
   npts: 16384,
   ncities: 15,
   nterrs: 5,
-  fontsizes: {
+  fontSizes: {
     region: 40,
     city: 25,
     town: 20

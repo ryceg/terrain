@@ -60,7 +60,7 @@ export interface RenderParams {
   npts: number
   ncities: number
   nterrs: number
-  fontsizes: {
+  fontSizes: {
     region: number
     city: number
     town: number

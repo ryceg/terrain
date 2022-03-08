@@ -54,7 +54,7 @@ export function drawLabels(svg, render: Render) {
     const x = h.mesh.vxs[cities[i]][0];
     const y = h.mesh.vxs[cities[i]][1];
     const text = makeName(lang, 'city');
-    const size = i < nterrs ? params.fontsizes.city : params.fontsizes.town;
+    const size = i < nterrs ? params.fontSizes.city : params.fontSizes.town;
     const sx = 0.65 * size / 1000 * text.length;
     const sy = size / 1000;
     const posslabels = [
@@ -118,7 +118,7 @@ export function drawLabels(svg, render: Render) {
   for (let i = 0; i < nterrs; i++) {
     const city = cities[i];
     const text = makeName(lang, 'region');
-    const sy = params.fontsizes.region / 1000;
+    const sy = params.fontSizes.region / 1000;
     const sx = 0.6 * text.length * sy;
     const lc = terrCenter(h, terr, city, true);
     const oc = terrCenter(h, terr, city, false);
