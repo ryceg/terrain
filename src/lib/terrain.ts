@@ -1,8 +1,8 @@
 "use strict";
 import * as d3 from 'd3';
 import { voronoi as d3_voronoi } from 'd3-voronoi';
-import { PriorityQueue } from 'js-priority-queue';
-
+import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
+console.log(PriorityQueue)
 function randomVector(scale: number) {
   return [scale * rnorm(), scale * rnorm()];
 }
@@ -1106,17 +1106,17 @@ function drawMap(svg, render) {
   drawLabels(svg, render);
 }
 
-export function doMap(svg, params = defaultParams) {
+export function doMap(svg: SVGElement, params = defaultParams) {
   const render = {
     params: params
   };
-  const width = svg.attr('width');
-  svg.attr('height', width * params.extent.height / params.extent.width);
-  svg.attr('viewBox', -1000 * params.extent.width / 2 + ' ' +
-    -1000 * params.extent.height / 2 + ' ' +
-    1000 * params.extent.width + ' ' +
-    1000 * params.extent.height);
-  svg.selectAll().remove();
+  // const width = svg.attr('width');
+  // svg.attr('height', width * params.extent.height / params.extent.width);
+  // svg.attr('viewBox', -1000 * params.extent.width / 2 + ' ' +
+  //   -1000 * params.extent.height / 2 + ' ' +
+  //   1000 * params.extent.width + ' ' +
+  //   1000 * params.extent.height);
+  // svg.selectAll().remove();
   render.h = params.generator(params);
   placeCities(render);
   drawMap(svg, render);

@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { browser } from '$app/env';
 	import { defaultParams, doMap } from '$lib/terrain';
 	import { onMount } from 'svelte';
-
 	onMount(() => {
-		doMap('final', defaultParams);
+		if (browser) {
+			doMap('final', defaultParams);
+		}
 	});
 </script>
 
