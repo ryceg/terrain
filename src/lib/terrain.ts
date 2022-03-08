@@ -737,7 +737,7 @@ function relaxPath(path) {
   return newpath;
 }
 function visualizePoints(svg, pts: Pts) {
-  const circle = svg.selectAll('circle').data(pts);
+  const circle = d3.selectAll('circle').data(pts);
   circle.enter()
     .append('circle');
   circle.exit().remove();
@@ -760,7 +760,7 @@ function visualizeVoronoi(svg, field, lo: number, hi: number) {
   if (hi === undefined) hi = d3.max(field) + 1e-9;
   if (lo === undefined) lo = d3.min(field) - 1e-9;
   const mappedvals = field.map(function (x) { return x > hi ? 1 : x < lo ? 0 : (x - lo) / (hi - lo) });
-  const tris = svg.selectAll('path.field').data(field.mesh.tris)
+  const tris = d3.selectAll('path.field').data(field.mesh.tris)
   tris.enter()
     .append('path')
     .classed('field', true);
@@ -768,7 +768,7 @@ function visualizeVoronoi(svg, field, lo: number, hi: number) {
   tris.exit()
     .remove();
 
-  svg.selectAll('path.field')
+  d3.selectAll('path.field')
     .attr('d', makeD3Path)
     .style('fill', function (d, i) {
       return d3.interpolateViridis(mappedvals[i]);
@@ -781,13 +781,13 @@ function visualizeDownhill(h: HInterface) {
 }
 
 function drawPaths(svg, cls, paths) {
-  paths = svg.selectAll('path.' + cls).data(paths)
+  paths = d3.selectAll('path.' + cls).data(paths)
   paths.enter()
     .append('path')
     .classed(cls, true)
   paths.exit()
     .remove();
-  svg.selectAll('path.' + cls)
+  d3.selectAll('path.' + cls)
     .attr('d', makeD3Path);
 }
 
@@ -825,13 +825,13 @@ function visualizeSlopes(svg, render) {
       strokes.push([[x - l, y + l * s], [x + l, y - l * s]]);
     }
   }
-  const lines = svg.selectAll('line.slope').data(strokes)
+  const lines = d3.selectAll('line.slope').data(strokes)
   lines.enter()
     .append('line')
     .classed('slope', true);
   lines.exit()
     .remove();
-  svg.selectAll('line.slope')
+  d3.selectAll('line.slope')
     .attr('x1', function (d) { return 1000 * d[0][0] })
     .attr('y1', function (d) { return 1000 * d[0][1] })
     .attr('x2', function (d) { return 1000 * d[1][0] })
@@ -855,13 +855,13 @@ function visualizeCities(svg, render) {
   const h = render.h;
   const n = render.params.nterrs;
 
-  const circs = svg.selectAll('circle.city').data(cities);
+  const circs = d3.selectAll('circle.city').data(cities);
   circs.enter()
     .append('circle')
     .classed('city', true);
   circs.exit()
     .remove();
-  svg.selectAll('circle.city')
+  d3.selectAll('circle.city')
     .attr('cx', function (d) { return 1000 * h.mesh.vxs[d][0] })
     .attr('cy', function (d) { return 1000 * h.mesh.vxs[d][1] })
     .attr('r', function (d, i) { return i >= n ? 4 : 10 })
@@ -1008,13 +1008,13 @@ function drawLabels(svg, render) {
     label.size = size;
     citylabels.push(label);
   }
-  let texts = svg.selectAll('text.city').data(citylabels);
+  let texts = d3.selectAll('text.city').data(citylabels);
   texts.enter()
     .append('text')
     .classed('city', true);
   texts.exit()
     .remove();
-  svg.selectAll('text.city')
+  d3.selectAll('text.city')
     .attr('x', function (d) { return 1000 * d.x })
     .attr('y', function (d) { return 1000 * d.y })
     .style('font-size', function (d) { return d.size })
@@ -1078,13 +1078,13 @@ function drawLabels(svg, render) {
       width: sx
     });
   }
-  texts = svg.selectAll('text.region').data(reglabels);
+  texts = d3.selectAll('text.region').data(reglabels);
   texts.enter()
     .append('text')
     .classed('region', true);
   texts.exit()
     .remove();
-  svg.selectAll('text.region')
+  d3.selectAll('text.region')
     .attr('x', function (d) { return 1000 * d.x })
     .attr('y', function (d) { return 1000 * d.y })
     .style('font-size', function (d) { return 1000 * d.size })
@@ -1116,7 +1116,7 @@ export function doMap(svg: SVGElement, params = defaultParams) {
   //   -1000 * params.extent.height / 2 + ' ' +
   //   1000 * params.extent.width + ' ' +
   //   1000 * params.extent.height);
-  // svg.selectAll().remove();
+  // d3.selectAll().remove();
   render.h = params.generator(params);
   placeCities(render);
   drawMap(svg, render);
