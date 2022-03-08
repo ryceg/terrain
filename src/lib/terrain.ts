@@ -1,5 +1,5 @@
 "use strict";
-import type { Selection } from 'd3';
+import type { BaseType, Selection } from 'd3';
 import * as d3 from 'd3';
 import { voronoi as d3_voronoi } from 'd3-voronoi';
 import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
@@ -254,6 +254,7 @@ function zero(mesh: Mesh): ZInterface {
   for (let i = 0; i < mesh.vxs.length; i++) {
     z[i] = 0;
   }
+  // is it an array? Is it an object?
   z.mesh = mesh;
   return z;
 }
@@ -271,6 +272,7 @@ function cone(mesh: Mesh, slope: ZInterface) {
 }
 
 function map(h: HInterface, f: number) {
+  // is h an array, or does it have a method named `map` like mesh?
   const newh = h.map(f);
   newh.mesh = h.mesh;
   return newh;
@@ -283,6 +285,7 @@ function normalize(h: HInterface) {
 }
 
 function peaky(h: HInterface) {
+  // what is the Math.sqrt meant to be? It requires an argument!
   return map(normalize(h), Math.sqrt);
 }
 
@@ -469,7 +472,7 @@ function doErosion(h: HInterface, amount: number, n = 1) {
   return h;
 }
 
-function setSeaLevel(h: HInterface, q) {
+function setSeaLevel(h: HInterface, q: number) {
   const newh = zero(h.mesh);
   const delta = quantile(h, q);
   for (let i = 0; i < h.length; i++) {
@@ -544,6 +547,7 @@ function trislope(h: HInterface, i: number) {
 }
 
 function cityScore(h: HInterface, cities: City[]) {
+  // what is the Math.sqrt meant to be? It requires an argument!
   const score = map(getFlux(h), Math.sqrt);
   for (let i = 0; i < h.length; i++) {
     if (h[i] <= 0 || isNearEdge(h.mesh, i)) {
@@ -739,7 +743,7 @@ function relaxPath(path) {
   newpath.push(path[path.length - 1]);
   return newpath;
 }
-function visualizePoints(svg, pts: Pts) {
+function visualizePoints(svg: Selection<SVGSVGElement, any, BaseType, any>, pts: Pts) {
   const circle = d3.selectAll('circle').data(pts);
   circle.enter()
     .append('circle');
@@ -759,7 +763,7 @@ function makeD3Path(path) {
   return p.toString();
 }
 
-function visualizeVoronoi(svg, field, lo?: number, hi?: number) {
+function visualizeVoronoi(svg: Selection<SVGSVGElement, any, BaseType, any>, field, lo?: number, hi?: number) {
   if (hi === undefined) hi = d3.max(field) + 1e-9;
   if (lo === undefined) lo = d3.min(field) - 1e-9;
   const mappedvals = field.map(function (x) { return x > hi ? 1 : x < lo ? 0 : (x - lo) / (hi - lo) });
@@ -783,7 +787,7 @@ function visualizeDownhill(h: HInterface) {
   drawPaths('river', links);
 }
 
-export function drawPaths(svg, cls, paths) {
+export function drawPaths(svg: Selection<SVGSVGElement, any, BaseType, any>, cls, paths) {
   paths = d3.selectAll('path.' + cls).data(paths)
   paths.enter()
     .append('path')
@@ -794,7 +798,7 @@ export function drawPaths(svg, cls, paths) {
     .attr('d', makeD3Path);
 }
 
-export function visualizeSlopes(svg, render) {
+export function visualizeSlopes(svg: Selection<SVGSVGElement, any, BaseType, any>, render: Render) {
   const h = render.h;
   const strokes = [];
   const r = 0.25 / Math.sqrt(h.length);
@@ -853,7 +857,7 @@ function visualizeBorders(h: HInterface, cities: City[], n: number) {
 }
 
 
-export function visualizeCities(svg, render) {
+export function visualizeCities(svg: Selection<SVGSVGElement, any, BaseType, any>, render: Render) {
   const cities = render.cities;
   const h = render.h;
   const n = render.params.nterrs;
@@ -886,7 +890,7 @@ function dropEdge(h: HInterface, p = 4) {
   return newh;
 }
 
-export function generateCoast(params) {
+export function generateCoast(params: RenderParams) {
   const mesh = generateGoodMesh(params.npts, params.extent);
   let h = add(
     slope(mesh, randomVector(4)),
@@ -932,94 +936,94 @@ export function addSVG(div: Selection<SVGSVGElement, any, any, any>) {
     .attr("width", 400)
     .attr("viewBox", "-500 -500 1000 1000");
 }
-const meshDiv: HTMLDivElement = d3.select("div#mesh");
-const meshSVG = addSVG(meshDiv);
+// const meshDiv: HTMLDivElement = d3.select("div#mesh");
+// const meshSVG = addSVG(meshDiv);
 
-const meshPts = null;
-let meshVxs = null;
-const meshDual = false;
+// const meshPts = null;
+// let meshVxs = null;
+// const meshDual = false;
 
-function meshDraw() {
-  if (meshDual && !meshVxs) {
-    meshVxs = makeMesh(meshPts).vxs;
-  }
-  visualizePoints(meshSVG, meshDual ? meshVxs : meshPts);
-}
+// function meshDraw() {
+//   if (meshDual && !meshVxs) {
+//     meshVxs = makeMesh(meshPts).vxs;
+//   }
+//   visualizePoints(meshSVG, meshDual ? meshVxs : meshPts);
+// }
 
-const primDiv: HTMLDivElement = d3.select("div#prim");
-const primSVG = addSVG(primDiv);
+// const primDiv: HTMLDivElement = d3.select("div#prim");
+// const primSVG = addSVG(primDiv);
 
-const primH = zero(generateGoodMesh(4096));
+// const primH = zero(generateGoodMesh(4096));
 
-function primDraw() {
-  visualizeVoronoi(primSVG, primH, -1, 1);
-  drawPaths(primSVG, 'coast', contour(primH, 0));
-}
+// function primDraw() {
+//   visualizeVoronoi(primSVG, primH, -1, 1);
+//   drawPaths(primSVG, 'coast', contour(primH, 0));
+// }
 
-primDraw();
+// // primDraw();
 
-const erodeDiv: HTMLDivElement = d3.select("div#erode");
-const erodeSVG = addSVG(erodeDiv);
+// const erodeDiv: HTMLDivElement = d3.select("div#erode");
+// const erodeSVG = addSVG(erodeDiv);
 
-function generateUneroded() {
-  const mesh = generateGoodMesh(4096);
-  let h = add(slope(mesh, randomVector(4)),
-    cone(mesh, runif(-1, 1)),
-    mountains(mesh, 50));
-  h = peaky(h);
-  h = fillSinks(h);
-  h = setSeaLevel(h, 0.5);
-  return h;
-}
+// function generateUneroded() {
+//   const mesh = generateGoodMesh(4096);
+//   let h = add(slope(mesh, randomVector(4)),
+//     cone(mesh, runif(-1, 1)),
+//     mountains(mesh, 50));
+//   h = peaky(h);
+//   h = fillSinks(h);
+//   h = setSeaLevel(h, 0.5);
+//   return h;
+// }
 
-const erodeH = primH;
-const erodeViewErosion = false;
+// const erodeH = primH;
+// const erodeViewErosion = false;
 
-function erodeDraw() {
-  if (erodeViewErosion) {
-    visualizeVoronoi(erodeSVG, erosionRate(erodeH));
-  } else {
-    visualizeVoronoi(erodeSVG, erodeH, 0, 1);
-  }
-  drawPaths(erodeSVG, "coast", contour(erodeH, 0));
-}
+// function erodeDraw() {
+//   if (erodeViewErosion) {
+//     visualizeVoronoi(erodeSVG, erosionRate(erodeH));
+//   } else {
+//     visualizeVoronoi(erodeSVG, erodeH, 0, 1);
+//   }
+//   drawPaths(erodeSVG, "coast", contour(erodeH, 0));
+// }
 
-const physDiv: HTMLDivElement = d3.select("div#phys");
-const physSVG = addSVG(physDiv);
-const physH = erodeH;
+// const physDiv: HTMLDivElement = d3.select("div#phys");
+// const physSVG = addSVG(physDiv);
+// const physH = erodeH;
 
-const physViewCoast = false;
-const physViewRivers = false;
-const physViewSlope = false;
-const physViewHeight = true;
+// const physViewCoast = false;
+// const physViewRivers = false;
+// const physViewSlope = false;
+// const physViewHeight = true;
 
-function physDraw() {
-  if (physViewHeight) {
-    visualizeVoronoi(physSVG, physH, 0);
-  } else {
-    physSVG.selectAll("path.field").remove();
-  }
-  if (physViewCoast) {
-    drawPaths(physSVG, "coast", contour(physH, 0));
-  } else {
-    drawPaths(physSVG, "coast", []);
-  }
-  if (physViewRivers) {
-    drawPaths(physSVG, "river", getRivers(physH, 0.01));
-  } else {
-    drawPaths(physSVG, "river", []);
-  }
-  if (physViewSlope) {
-    visualizeSlopes(physSVG, { h: physH });
-  } else {
-    visualizeSlopes(physSVG, { h: zero(physH.mesh) });
-  }
-}
+// function physDraw() {
+//   if (physViewHeight) {
+//     visualizeVoronoi(physSVG, physH, 0);
+//   } else {
+//     physSVG.selectAll("path.field").remove();
+//   }
+//   if (physViewCoast) {
+//     drawPaths(physSVG, "coast", contour(physH, 0));
+//   } else {
+//     drawPaths(physSVG, "coast", []);
+//   }
+//   if (physViewRivers) {
+//     drawPaths(physSVG, "river", getRivers(physH, 0.01));
+//   } else {
+//     drawPaths(physSVG, "river", []);
+//   }
+//   if (physViewSlope) {
+//     visualizeSlopes(physSVG, { h: physH });
+//   } else {
+//     visualizeSlopes(physSVG, { h: zero(physH.mesh) });
+//   }
+// }
 
-const cityDiv: HTMLDivElement = d3.select("div#city");
-const citySVG = addSVG(cityDiv);
+// const cityDiv: HTMLDivElement = d3.select("div#city");
+// const citySVG = addSVG(cityDiv);
 
-const cityViewScore = true;
+// const cityViewScore = true;
 
 // function newCityRender(h) {
 //   h = h || generateCoast({ npts: 4096, extent: defaultExtent });

@@ -1,9 +1,10 @@
 "use strict";
+import type { BaseType } from 'd3';
 import * as d3 from 'd3';
-import { makeName, makeRandomLanguage, terrCenter } from './terrain';
+import { makeName, makeRandomLanguage, terrCenter, type Render } from './terrain';
 
 
-export function drawLabels(svg, render: Render) {
+export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unknown>, render: Render) {
   const params = render.params;
   const h = render.h;
   const terr = render.terr;
