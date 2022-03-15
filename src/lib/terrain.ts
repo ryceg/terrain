@@ -1,70 +1,18 @@
-"use strict";
+'use strict';
+
 import type { BaseType, Selection } from 'd3';
 import * as d3 from 'd3';
 import { voronoi as d3_voronoi } from 'd3-voronoi';
 import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
+import type Extent from './extent';
+import type Mesh from './mesh';
+import type { Pts } from './pts';
+import type Voronoi from './voronoi';
+
 console.log(PriorityQueue)
+
 function randomVector(scale: number) {
   return [scale * rnorm(), scale * rnorm()];
-}
-
-export interface Extent {
-  width: number
-  height: number
-}
-
-export interface Render {
-  cities?: City[]
-  rivers?: any
-  coasts?: any
-  borders?: any
-  terr?: any
-  params: RenderParams
-
-  h: Heightmap
-}
-
-export interface Heightmap {
-  mesh: Mesh
-  length: number
-}
-
-type Pts = number[][]
-
-export interface Mesh {
-  pts: Pts
-  vor: Voronoi
-  vxs: number[]
-  adj: number[][]
-  tris: number[][]
-  edges: number[][]
-  extent: Extent
-}
-
-export interface Voronoi {
-  edges: VoronoiEdge[]
-}
-
-export interface VoronoiEdge {
-  left: number
-  right: number
-}
-
-export interface City {
-
-}
-
-export interface RenderParams {
-  extent: Extent
-  generator(): any[]
-  npts: number
-  ncities: number
-  nterrs: number
-  fontSizes: {
-    region: number
-    city: number
-    town: number
-  }
 }
 
 export const defaultExtent: Extent = {
@@ -79,9 +27,6 @@ export interface HInterface {
 export interface ZInterface {
   mesh: Mesh
 }
-
-
-"use strict";
 
 function runif(lo: number, hi: number) {
   return lo + Math.random() * (hi - lo);
@@ -109,8 +54,6 @@ const rnorm = (function () {
   }
   return rnorm;
 })();
-
-
 
 function generatePoints(n: number, extent = defaultExtent) {
   const pts = [];
@@ -920,14 +863,6 @@ export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean) {
     n++;
   }
   return [x / n, y / n];
-}
-
-export function makeName() {
-  return 'Huzzah'
-}
-
-export function makeRandomLanguage() {
-  return 'Pig Latin'
 }
 
 export function addSVG(div: Selection<SVGSVGElement, any, any, any>) {

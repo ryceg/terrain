@@ -1,9 +1,9 @@
 "use strict";
-import type { BaseType, Selection } from 'd3';
 import { drawLabels } from "./drawLabels";
-import { contour, drawPaths, getBorders, getRivers, getTerritories, visualizeCities, visualizeSlopes, type Render } from './terrain';
+import type Render from './render';
+import { contour, drawPaths, getBorders, getRivers, getTerritories, visualizeCities, visualizeSlopes } from './terrain';
 
-export function drawMap(svg: Selection<SVGSVGElement, any, BaseType, any>, render: Render) {
+export function drawMap(svg: SVGSVGElement, render: Render) {
   render.rivers = getRivers(render.h, 0.01);
   render.coasts = contour(render.h, 0);
   render.terr = getTerritories(render);

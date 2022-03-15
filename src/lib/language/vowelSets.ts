@@ -1,33 +1,15 @@
-const vowelSets: {
-  name: string;
-  V: string;
-}[] = [
-    {
-      name: 'Standard 5-vowel',
-      V: 'aeiou'
-    },
-    {
-      name: '3-vowel a i u',
-      V: 'aiu'
-    },
-    {
-      name: 'Extra A E I',
-      V: 'aeiouAEI'
-    },
-    {
-      name: 'Extra U',
-      V: 'aeiouU'
-    },
-    {
-      name: '5-vowel a i u A I',
-      V: 'aiuAI'
-    },
-    {
-      name: '3-vowel e o u',
-      V: 'eou'
-    },
-    {
-      name: 'Extra A O U',
-      V: 'aeiouAOU'
-    }
+'use strict';
+
+import VowelSet from './vowelSet';
+
+export function all(): VowelSet[] {
+  return [
+    new VowelSet('3-vowel a i u', 'aiu'),
+    new VowelSet('3-vowel e o u', 'eou'),
+    new VowelSet('5-vowel a i u A I', 'aiuAI'),
+    new VowelSet('Extra A E I', 'aeiouAEI'),
+    new VowelSet('Extra A O U', 'aeiouAOU'),
+    new VowelSet('Extra U', 'aeiouU'),
+    new VowelSet('Standard 5-vowel', 'aeiou'),
   ];
+}
