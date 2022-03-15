@@ -1,8 +1,9 @@
 "use strict";
 import type { BaseType } from 'd3';
 import * as d3 from 'd3';
-import { makeName, makeRandomLanguage, terrCenter, type Render } from './terrain';
-
+import * as Languages from "./language/languages";
+import type Render from "./render";
+import { terrCenter } from './terrain';
 
 export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unknown>, render: Render) {
   const params = render.params;
@@ -11,7 +12,7 @@ export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unkn
   const cities = render.cities;
   const nterrs = render.params.nterrs;
   const avoids = [render.rivers, render.coasts, render.borders];
-  const lang = makeRandomLanguage();
+  const lang = Languages.makeRandomLanguage();
   const citylabels = [];
   function penalty(label) {
     let pen = 0;
@@ -54,7 +55,7 @@ export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unkn
   for (let i = 0; i < cities.length; i++) {
     const x = h.mesh.vxs[cities[i]][0];
     const y = h.mesh.vxs[cities[i]][1];
-    const text = makeName(lang, 'city');
+    const text = Languages.makeName(lang, 'city');
     const size = i < nterrs ? params.fontSizes.city : params.fontSizes.town;
     const sx = 0.65 * size / 1000 * text.length;
     const sy = size / 1000;
@@ -118,7 +119,7 @@ export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unkn
   const reglabels = [];
   for (let i = 0; i < nterrs; i++) {
     const city = cities[i];
-    const text = makeName(lang, 'region');
+    const text = Languages.makeName(lang, 'region');
     const sy = params.fontSizes.region / 1000;
     const sx = 0.6 * text.length * sy;
     const lc = terrCenter(h, terr, city, true);

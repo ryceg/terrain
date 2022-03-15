@@ -1,3 +1,0 @@
-function makeBasicLanguage() {
-  return basicLanguage;
-}

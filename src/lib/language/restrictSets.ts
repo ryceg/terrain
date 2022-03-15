@@ -1,17 +1,11 @@
-const restrictSets: {
-  name: string;
-  res: RegExp[];
-}[] = [
-    {
-      name: 'None',
-      res: []
-    },
-    {
-      name: 'Double sounds',
-      res: [/(.)\1/]
-    },
-    {
-      name: 'Doubles and hard clusters',
-      res: [/[sʃf][sʃ]/, /(.)\1/, /[rl][rl]/]
-    }
+'use strict';
+
+import RestrictSet from './restrictSet';
+
+export function all(): RestrictSet[] {
+  return [
+    new RestrictSet('None', []),
+    new RestrictSet('Double sounds', [/(.)\1/]),
+    new RestrictSet('Doubles and hard clusters', [/[sʃf][sʃ]/, /(.)\1/, /[rl][rl]/]),
   ];
+}
