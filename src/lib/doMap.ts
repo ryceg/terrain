@@ -1,8 +1,8 @@
 "use strict";
 import { defaultParams } from "./defaultParams";
 import { drawMap } from "./drawMap";
-import { placeCities, type Render } from './terrain';
-
+import type Render from './render';
+import { placeCities } from './terrain';
 
 export function doMap(svg: SVGSVGElement, params = defaultParams) {
   const render: Render = {

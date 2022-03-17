@@ -1,8 +1,8 @@
 'use strict';
 
-import type City from './city';
-import type Heightmap from './heightMap';
+import type { City } from './city';
 import type RenderParams from './renderParams';
+import type { HInterface } from './terrain';
 
 export default interface Render {
   cities?: City[]
@@ -12,5 +12,5 @@ export default interface Render {
   terr?: any
   params: RenderParams
 
-  h: Heightmap
+  h: HInterface
 }

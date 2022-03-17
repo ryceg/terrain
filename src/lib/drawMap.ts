@@ -1,9 +1,10 @@
 "use strict";
+
 import { drawLabels } from "./drawLabels";
 import type Render from './render';
 import { contour, drawPaths, getBorders, getRivers, getTerritories, visualizeCities, visualizeSlopes } from './terrain';
 
-export function drawMap(svg: SVGSVGElement, render: Render) {
+export function drawMap(svg, render: Render) {
   render.rivers = getRivers(render.h, 0.01);
   render.coasts = contour(render.h, 0);
   render.terr = getTerritories(render);

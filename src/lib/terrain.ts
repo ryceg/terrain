@@ -1,17 +1,18 @@
 'use strict';
 
-import type { BaseType, Selection } from 'd3';
+import type { Selection } from 'd3';
 import * as d3 from 'd3';
 import { voronoi as d3_voronoi } from 'd3-voronoi';
 import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
+import type { City } from './city';
 import type Extent from './extent';
-import type Mesh from './mesh';
+import Mesh from './mesh';
 import type { Pts } from './pts';
+import type Render from './render';
+import type RenderParams from './renderParams';
 import type Voronoi from './voronoi';
 
-console.log(PriorityQueue)
-
-function randomVector(scale: number) {
+function randomVector(scale: number): number[] {
   return [scale * rnorm(), scale * rnorm()];
 }
 
@@ -20,15 +21,10 @@ export const defaultExtent: Extent = {
   height: 1
 };
 
-export interface HInterface {
-  mesh: Mesh
-}
+export type HInterface = number[] & { mesh: Mesh, downhill: number[] }
+export type ZInterface = number[] & { mesh: Mesh }
 
-export interface ZInterface {
-  mesh: Mesh
-}
-
-function runif(lo: number, hi: number) {
+function runif(lo: number, hi: number): number {
   return lo + Math.random() * (hi - lo);
 }
 
@@ -55,7 +51,7 @@ const rnorm = (function () {
   return rnorm;
 })();
 
-function generatePoints(n: number, extent = defaultExtent) {
+function generatePoints(n: number, extent = defaultExtent): number[][] {
   const pts = [];
   for (let i = 0; i < n; i++) {
     pts.push([(Math.random() - 0.5) * extent.width, (Math.random() - 0.5) * extent.height]);
@@ -63,7 +59,7 @@ function generatePoints(n: number, extent = defaultExtent) {
   return pts;
 }
 
-function centroid(pts: Pts) {
+function centroid(pts: Pts): number[] {
   let x = 0;
   let y = 0;
   for (let i = 0; i < pts.length; i++) {
@@ -73,7 +69,7 @@ function centroid(pts: Pts) {
   return [x / pts.length, y / pts.length];
 }
 
-function improvePoints(pts: Pts, n = 1, extent = defaultExtent) {
+function improvePoints(pts: Pts, n = 1, extent = defaultExtent): number[][] {
   for (let i = 0; i < n; i++) {
     pts = voronoi(pts, extent)
       .polygons(pts)
@@ -82,7 +78,7 @@ function improvePoints(pts: Pts, n = 1, extent = defaultExtent) {
   return pts;
 }
 
-function generateGoodPoints(n: number, extent = defaultExtent) {
+function generateGoodPoints(n: number, extent = defaultExtent): number[][] {
   let pts = generatePoints(n, extent);
   pts = pts.sort(function (a, b) {
     return a[0] - b[0];
@@ -132,30 +128,23 @@ function makeMesh(pts: Pts, extent = defaultExtent): Mesh {
     if (e.right && !tris[e1].includes(e.right)) tris[e1].push(e.right);
   }
 
-  const mesh: Mesh = {
-    pts: pts,
-    vor: vor,
-    vxs: vxs,
-    adj: adj,
-    tris: tris,
-    edges: edges,
-    extent: extent,
-    map(f) {
-      const mapped = vxs.map(f);
-      mapped.mesh = mesh;
-      return mapped;
-    }
-  }
+  let mesh = new Mesh();
+  mesh.pts = pts;
+  mesh.vor = vor;
+  mesh.vxs = vxs;
+  mesh.adj = adj;
+  mesh.tris = tris;
+  mesh.edges = edges;
+  mesh.extent = extent;
 
   return mesh;
 }
-
-
 
 function generateGoodMesh(n: number, extent = defaultExtent) {
   const pts = generateGoodPoints(n, extent);
   return makeMesh(pts, extent);
 }
+
 function isEdge(mesh: Mesh, i: number) {
   return (mesh.adj[i].length < 3);
 }
@@ -192,12 +181,11 @@ function quantile(h: HInterface, q) {
   return d3.quantile(sortedh, q);
 }
 
-function zero(mesh: Mesh): ZInterface {
-  const z = [];
+function zero(mesh: Mesh): HInterface {
+  let z: HInterface = [] as HInterface;
   for (let i = 0; i < mesh.vxs.length; i++) {
     z[i] = 0;
   }
-  // is it an array? Is it an object?
   z.mesh = mesh;
   return z;
 }
@@ -208,15 +196,14 @@ function slope(mesh: Mesh, direction): ZInterface {
   });
 }
 
-function cone(mesh: Mesh, slope: ZInterface) {
+function cone(mesh: Mesh, slope: number) {
   return mesh.map(function (x) {
     return Math.pow(x[0] * x[0] + x[1] * x[1], 0.5) * slope;
   });
 }
 
-function map(h: HInterface, f: number) {
-  // is h an array, or does it have a method named `map` like mesh?
-  const newh = h.map(f);
+function map(h: HInterface, f) {
+  let newh: HInterface = h.map(f) as HInterface;
   newh.mesh = h.mesh;
   return newh;
 }
@@ -229,6 +216,7 @@ function normalize(h: HInterface) {
 
 function peaky(h: HInterface) {
   // what is the Math.sqrt meant to be? It requires an argument!
+  // Math.sqrt is being passed as a function here, not being called directly. That's why it has no arguments.
   return map(normalize(h), Math.sqrt);
 }
 
@@ -274,9 +262,10 @@ function relax(h: HInterface) {
 
 function downhill(h: HInterface) {
   if (h.downhill) return h.downhill;
-  function downfrom(i) {
-    if (isEdge(h.mesh, i)) return -2;
-    let best = -1;
+
+  function downfrom(i): number | number[] {
+    if (isEdge(h.mesh, i)) return -2; // this is clearly meant to be an error code
+    let best = -1; // this is another error code
     let besth = h[i];
     const nbs = neighbours(h.mesh, i);
     for (let j = 0; j < nbs.length; j++) {
@@ -285,13 +274,15 @@ function downhill(h: HInterface) {
         best = nbs[j];
       }
     }
-    return best;
+    return best; // this is either a point or a -1
   }
+
   const downs = [];
   for (let i = 0; i < h.length; i++) {
     downs[i] = downfrom(i);
   }
   h.downhill = downs;
+
   return downs;
 }
 
@@ -490,7 +481,6 @@ function trislope(h: HInterface, i: number) {
 }
 
 function cityScore(h: HInterface, cities: City[]) {
-  // what is the Math.sqrt meant to be? It requires an argument!
   const score = map(getFlux(h), Math.sqrt);
   for (let i = 0; i < h.length; i++) {
     if (h[i] <= 0 || isNearEdge(h.mesh, i)) {
@@ -505,6 +495,7 @@ function cityScore(h: HInterface, cities: City[]) {
   }
   return score;
 }
+
 function placeCity(render: Render) {
   render.cities = render.cities || [];
   const score = cityScore(render.h, render.cities);
@@ -567,7 +558,7 @@ export function getTerritories(render: Render) {
   let n = render.params.nterrs;
   if (n > render.cities.length) n = render.cities.length;
   const flux = getFlux(h);
-  const terr = [];
+  const terr: HInterface = [] as HInterface; // this might be the wrong type, just doing it for now
   const queue = new PriorityQueue({ comparator: function (a, b) { return a.score - b.score } });
   function weight(u, v) {
     const horiz = distance(h.mesh, u, v);
@@ -686,12 +677,12 @@ function relaxPath(path) {
   newpath.push(path[path.length - 1]);
   return newpath;
 }
-function visualizePoints(svg: Selection<SVGSVGElement, any, BaseType, any>, pts: Pts) {
-  const circle = d3.selectAll('circle').data(pts);
+function visualizePoints(svg, pts: Pts) {
+  const circle = svg.selectAll('circle').data(pts);
   circle.enter()
     .append('circle');
   circle.exit().remove();
-  d3.selectAll('circle')
+  svg.selectAll('circle')
     .attr('cx', function (d) { return 1000 * d[0] })
     .attr('cy', function (d) { return 1000 * d[1] })
     .attr('r', 100 / Math.sqrt(pts.length));
@@ -706,11 +697,11 @@ function makeD3Path(path) {
   return p.toString();
 }
 
-function visualizeVoronoi(svg: Selection<SVGSVGElement, any, BaseType, any>, field, lo?: number, hi?: number) {
+function visualizeVoronoi(svg, field: HInterface, lo?: number, hi?: number) {
   if (hi === undefined) hi = d3.max(field) + 1e-9;
   if (lo === undefined) lo = d3.min(field) - 1e-9;
   const mappedvals = field.map(function (x) { return x > hi ? 1 : x < lo ? 0 : (x - lo) / (hi - lo) });
-  const tris = d3.selectAll('path.field').data(field.mesh.tris)
+  const tris = svg.selectAll('path.field').data(field.mesh.tris)
   tris.enter()
     .append('path')
     .classed('field', true);
@@ -718,30 +709,30 @@ function visualizeVoronoi(svg: Selection<SVGSVGElement, any, BaseType, any>, fie
   tris.exit()
     .remove();
 
-  d3.selectAll('path.field')
+  svg.selectAll('path.field')
     .attr('d', makeD3Path)
     .style('fill', function (d, i) {
       return d3.interpolateViridis(mappedvals[i]);
     });
 }
 
-function visualizeDownhill(h: HInterface) {
+function visualizeDownhill(svg, h: HInterface) {
   const links = getRivers(h, 0.01);
-  drawPaths('river', links);
+  drawPaths(svg, 'river', links);
 }
 
-export function drawPaths(svg: Selection<SVGSVGElement, any, BaseType, any>, cls, paths) {
-  paths = d3.selectAll('path.' + cls).data(paths)
+export function drawPaths(svg, cls: string, paths) {
+  paths = svg.selectAll('path.' + cls).data(paths)
   paths.enter()
     .append('path')
     .classed(cls, true)
   paths.exit()
     .remove();
-  d3.selectAll('path.' + cls)
+  svg.selectAll('path.' + cls)
     .attr('d', makeD3Path);
 }
 
-export function visualizeSlopes(svg: Selection<SVGSVGElement, any, BaseType, any>, render: Render) {
+export function visualizeSlopes(svg, render: Render) {
   const h = render.h;
   const strokes = [];
   const r = 0.25 / Math.sqrt(h.length);
@@ -775,43 +766,41 @@ export function visualizeSlopes(svg: Selection<SVGSVGElement, any, BaseType, any
       strokes.push([[x - l, y + l * s], [x + l, y - l * s]]);
     }
   }
-  const lines = d3.selectAll('line.slope').data(strokes)
+  const lines = svg.selectAll('line.slope').data(strokes)
   lines.enter()
     .append('line')
     .classed('slope', true);
   lines.exit()
     .remove();
-  d3.selectAll('line.slope')
+  svg.selectAll('line.slope')
     .attr('x1', function (d) { return 1000 * d[0][0] })
     .attr('y1', function (d) { return 1000 * d[0][1] })
     .attr('x2', function (d) { return 1000 * d[1][0] })
     .attr('y2', function (d) { return 1000 * d[1][1] })
 }
 
-
-function visualizeContour(h: HInterface, level = 0) {
+function visualizeContour(svg, h: HInterface, level = 0) {
   const links = contour(h, level);
-  drawPaths('coast', links);
+  drawPaths(svg, 'coast', links);
 }
 
-function visualizeBorders(h: HInterface, cities: City[], n: number) {
-  const links = getBorders(h, getTerritories(h, cities, n));
-  drawPaths('border', links);
+function visualizeBorders(svg, render: Render) {
+  const links = getBorders(render);
+  drawPaths(svg, 'border', links);
 }
 
-
-export function visualizeCities(svg: Selection<SVGSVGElement, any, BaseType, any>, render: Render) {
+export function visualizeCities(svg, render: Render) {
   const cities = render.cities;
   const h = render.h;
   const n = render.params.nterrs;
 
-  const circs = d3.selectAll('circle.city').data(cities);
+  const circs = svg.selectAll('circle.city').data(cities);
   circs.enter()
     .append('circle')
     .classed('city', true);
   circs.exit()
     .remove();
-  d3.selectAll('circle.city')
+  svg.selectAll('circle.city')
     .attr('cx', function (d) { return 1000 * h.mesh.vxs[d][0] })
     .attr('cy', function (d) { return 1000 * h.mesh.vxs[d][1] })
     .attr('r', function (d, i) { return i >= n ? 4 : 10 })
@@ -833,7 +822,7 @@ function dropEdge(h: HInterface, p = 4) {
   return newh;
 }
 
-export function generateCoast(params: RenderParams) {
+export function generateCoast(params: RenderParams): HInterface {
   const mesh = generateGoodMesh(params.npts, params.extent);
   let h = add(
     slope(mesh, randomVector(4)),
@@ -851,7 +840,7 @@ export function generateCoast(params: RenderParams) {
   return h;
 }
 
-export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean) {
+export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean): number[] {
   let x = 0;
   let y = 0;
   let n = 0;

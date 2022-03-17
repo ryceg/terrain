@@ -1,11 +1,11 @@
 "use strict";
-import type { BaseType } from 'd3';
+
 import * as d3 from 'd3';
 import * as Languages from "./language/languages";
 import type Render from "./render";
 import { terrCenter } from './terrain';
 
-export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unknown>, render: Render) {
+export function drawLabels(svg, render: Render) {
   const params = render.params;
   const h = render.h;
   const terr = render.terr;
@@ -102,13 +102,13 @@ export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unkn
     label.size = size;
     citylabels.push(label);
   }
-  let texts = d3.selectAll('text.city').data(citylabels);
+  let texts = svg.selectAll('text.city').data(citylabels);
   texts.enter()
     .append('text')
     .classed('city', true);
   texts.exit()
     .remove();
-  d3.selectAll('text.city')
+  svg.selectAll('text.city')
     .attr('x', function (d) { return 1000 * d.x; })
     .attr('y', function (d) { return 1000 * d.y; })
     .style('font-size', function (d) { return d.size; })
@@ -178,13 +178,13 @@ export function drawLabels(svg: Selection<SVGSVGElement, unknown, BaseType, unkn
       width: sx
     });
   }
-  texts = d3.selectAll('text.region').data(reglabels);
+  texts = svg.selectAll('text.region').data(reglabels);
   texts.enter()
     .append('text')
     .classed('region', true);
   texts.exit()
     .remove();
-  d3.selectAll('text.region')
+  svg.selectAll('text.region')
     .attr('x', function (d) { return 1000 * d.x; })
     .attr('y', function (d) { return 1000 * d.y; })
     .style('font-size', function (d) { return 1000 * d.size; })

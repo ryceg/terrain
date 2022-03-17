@@ -1,18 +1,17 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-	import { defaultParams } from '$lib/defaultParams';
-	import { doMap } from '$lib/doMap';
+	import * as Render from '$lib/renderEverything';
 	import { onMount } from 'svelte';
-	let svg: SVGSVGElement;
+
 	onMount(() => {
 		if (browser) {
-			doMap(svg, defaultParams);
+			Render.render();
 		}
 	});
 </script>
 
 <h1>Terrain</h1>
+
 <p>A map generator</p>
-<div>
-	<svg bind:this={svg} id="final" height="400" width="400" viewBox="-500 -500 1000 1000" />
-</div>
+
+<div id="container" />
