@@ -1,10 +1,10 @@
 'use strict';
 
 import type { City } from './city';
+import type { HInterface } from './hinterface';
 import type RenderParams from './renderParams';
-import type { HInterface } from './terrain';
 
-export default interface Render {
+export default interface RenderData {
   cities?: City[]
   rivers?: any
   coasts?: any
