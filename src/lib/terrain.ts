@@ -3,6 +3,7 @@
 import type { Selection } from 'd3';
 import * as d3 from 'd3';
 import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
+import random from 'random';
 import type { City } from './city';
 import { defaultExtent } from './defaultextent';
 import * as Geometry from "./geometry";
@@ -16,7 +17,7 @@ import type Voronoi from './voronoi';
 function generatePoints(n: number, extent = defaultExtent): number[][] {
   const pts = [];
   for (let i = 0; i < n; i++) {
-    pts.push([(Math.random() - 0.5) * extent.width, (Math.random() - 0.5) * extent.height]);
+    pts.push([(random.float(0, 1) - 0.5) * extent.width, (random.float(0, 1) - 0.5) * extent.height]);
   }
   return pts;
 }
@@ -132,7 +133,7 @@ function add(...args) {
 function mountains(mesh: Mesh, n: number, r = 0.05) {
   const mounts = [];
   for (let i = 0; i < n; i++) {
-    mounts.push([mesh.extent.width * (Math.random() - 0.5), mesh.extent.height * (Math.random() - 0.5)]);
+    mounts.push([mesh.extent.width * (random.float(0, 1) - 0.5), mesh.extent.height * (random.float(0, 1) - 0.5)]);
   }
   const newvals = zero(mesh);
   for (let i = 0; i < mesh.vxs.length; i++) {

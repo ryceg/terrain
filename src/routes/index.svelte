@@ -3,7 +3,13 @@
 	import { defaultParams } from '$lib/defaultParams';
 	import { doMap } from '$lib/doMap';
 	import * as d3 from 'd3';
+	import random from 'random';
+	import seedrandom from 'seedrandom';
 	import { onMount } from 'svelte';
+	import * as RND from '../lib/random';
+
+	let seed = RND.randomString(13);
+	random.use(seedrandom(seed));
 
 	let container: any = '';
 	let svg = '';
@@ -17,6 +23,13 @@
 	});
 
 	function generate() {
+		random.use(seedrandom(seed));
+		doMap(svg, defaultParams);
+	}
+
+	function generateRandom() {
+		seed = RND.randomString(13);
+		random.use(seedrandom(seed));
 		doMap(svg, defaultParams);
 	}
 
@@ -33,6 +46,11 @@
 
 <p>A map generator</p>
 
-<button on:click={generate}>Generate Map</button>
+<label for="seed">Random Seed</label>
+<input type="text" name="seed" bind:value={seed} id="seed" />
+
+<button on:click={generate}>Generate Map From Seed</button>
+
+<button on:click={generateRandom}>Generate Map With Random Seed</button>
 
 <div id="container" />
