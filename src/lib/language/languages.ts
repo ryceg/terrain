@@ -22,13 +22,17 @@ export function makeBasicLanguage(): Language {
 }
 
 export function makeOrthoLanguage(): Language {
-  const lang = new Language();
-  lang.noOrtho = false;
-  return lang;
+  return new Language({
+    noOrtho: false
+  });
 }
 
 export function makeRandomLanguage(): Language {
-  const lang = new Language();
+  const lang = new Language({
+    noOrtho: false,
+    noMorph: false,
+    noWordPool: false
+  });
   const restrictSets = RestrictSets.all();
   const lSets = LiquidSets.all();
   const sSets = SibilantSets.all();
@@ -36,9 +40,7 @@ export function makeRandomLanguage(): Language {
   const vowelSets = VowelSets.all();
   const corthsets = ConsonantOrthographies.all();
   const vorthsets = VowelOrthographies.all();
-  lang.noOrtho = false;
-  lang.noMorph = false;
-  lang.noWordPool = false;
+
   lang.phonemes.C = RND.shuffled(RND.choose(consonantSets, 2).C);
   lang.phonemes.V = RND.shuffled(RND.choose(vowelSets, 2).V);
   lang.phonemes.L = RND.shuffled(RND.choose(lSets, 2).L);

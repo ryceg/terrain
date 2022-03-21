@@ -14,7 +14,7 @@ export function shuffled(list: any[]): any {
   return newlist;
 }
 
-export function choose(list: any[], exponent: number = 1): any {
+export function choose(list: any[], exponent = 1): any {
   return list[Math.floor(Math.pow(Math.random(), exponent) * list.length)];
 }
 
