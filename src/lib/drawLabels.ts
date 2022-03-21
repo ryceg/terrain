@@ -7,7 +7,7 @@ import * as Languages from "./language/languages";
 import type RenderData from "./renderData";
 import { terrCenter } from './terrain';
 
-function penalty(label, labels, h: HInterface, cities: City[], avoids): number {
+function penalty(label, labels, h: HInterface, cities: City[], avoids: any[]): number {
   let pen = 0;
   if (label.x0 < -0.45 * h.mesh.extent.width)
     pen += 100;
@@ -55,7 +55,7 @@ export function drawLabels(svg, render: RenderData) {
   const nterrs = render.params.nterrs;
   const avoids = [render.rivers, render.coasts, render.borders];
   const lang = Languages.makeRandomLanguage();
-  const citylabels = [];
+  const cityLabels = [];
 
   for (let i = 0; i < cities.length; i++) {
     const x = h.mesh.vxs[cities[i]][0];
@@ -64,7 +64,7 @@ export function drawLabels(svg, render: RenderData) {
     const size = i < nterrs ? params.fontSizes.city : params.fontSizes.town;
     const sx = 0.65 * size / 1000 * text.length;
     const sy = size / 1000;
-    const posslabels = [
+    const possLabels = [
       new Label(
         x + 0.8 * sy,
         y + 0.3 * sy,
@@ -103,23 +103,23 @@ export function drawLabels(svg, render: RenderData) {
       ),
     ];
 
-    let label = posslabels.reduce((a, b) => (penalty(a, posslabels, h, cities, avoids) > penalty(b, posslabels, h, cities, avoids) ? b : a));
+    const label = possLabels.reduce((a, b) => (penalty(a, possLabels, h, cities, avoids) > penalty(b, possLabels, h, cities, avoids) ? b : a));
     label.text = text;
     label.size = size;
-    citylabels.push(label);
+    cityLabels.push(label);
   }
-  let texts = svg.selectAll('text.city').data(citylabels);
+  let texts = svg.selectAll('text.city').data(cityLabels);
   texts.enter()
     .append('text')
     .classed('city', true);
   texts.exit()
     .remove();
   svg.selectAll('text.city')
-    .attr('x', function (d) { return 1000 * d.x; })
-    .attr('y', function (d) { return 1000 * d.y; })
-    .style('font-size', function (d) { return d.size; })
-    .style('text-anchor', function (d) { return d.align; })
-    .text(function (d) { return d.text; })
+    .attr('x', (d) => 1000 * d.x)
+    .attr('y', (d) => 1000 * d.y)
+    .style('font-size', (d) => d.size)
+    .style('text-anchor', (d) => d.align)
+    .text((d) => d.text)
     .raise();
 
   const reglabels = [];
@@ -131,7 +131,7 @@ export function drawLabels(svg, render: RenderData) {
     const lc = terrCenter(h, terr, city, true);
     const oc = terrCenter(h, terr, city, false);
     let best = 0;
-    let bestscore = -999999;
+    let bestScore = -999999;
     for (let j = 0; j < h.length; j++) {
       let score = 0;
       const v = h.mesh.vxs[j];
@@ -145,10 +145,10 @@ export function drawLabels(svg, render: RenderData) {
           Math.abs(v[1] - sy / 2 - u[1]) < sy) {
           score -= k < nterrs ? 4000 : 500;
         }
-        if (v[0] - sx / 2 < citylabels[k].x1 &&
-          v[0] + sx / 2 > citylabels[k].x0 &&
-          v[1] - sy < citylabels[k].y1 &&
-          v[1] > citylabels[k].y0) {
+        if (v[0] - sx / 2 < cityLabels[k].x1 &&
+          v[0] + sx / 2 > cityLabels[k].x0 &&
+          v[1] - sy < cityLabels[k].y1 &&
+          v[1] > cityLabels[k].y0) {
           score -= 5000;
         }
       }
@@ -171,8 +171,8 @@ export function drawLabels(svg, render: RenderData) {
         score -= 50000;
       if (v[1] - sy < -0.5 * h.mesh.extent.height)
         score -= 50000;
-      if (score > bestscore) {
-        bestscore = score;
+      if (score > bestScore) {
+        bestScore = score;
         best = j;
       }
     }
