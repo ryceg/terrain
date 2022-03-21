@@ -1,11 +1,8 @@
 <script lang="ts">
-	import random from 'random';
-	import seedrandom from 'seedrandom';
 	import Map from '../components/Map.svelte';
 	import * as RND from '../lib/random';
 	let inputSeed = RND.randomString(13);
 	let seed = inputSeed;
-	random.use(seedrandom(seed));
 
 	function generate() {
 		if (inputSeed !== seed) seed = inputSeed;
