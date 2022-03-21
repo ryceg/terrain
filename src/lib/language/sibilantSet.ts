@@ -1,11 +1,12 @@
 'use strict';
 
-export default class SibilantSet {
-  name: string;
+import { Set } from './set';
+
+export default class SibilantSet extends Set {
   S: string;
 
   constructor(name: string, S: string) {
-    this.name = name;
+    super(name);
     this.S = S;
   }
 }

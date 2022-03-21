@@ -1,11 +1,12 @@
 'use strict';
 
-export default class Orthography {
-  name: string;
+import { Set } from './set';
+
+export default class Orthography extends Set {
   orth: object;
 
   constructor(name: string, orth: object) {
-    this.name = name;
+    super(name);
     this.orth = orth;
   }
 }

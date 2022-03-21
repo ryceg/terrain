@@ -1,11 +1,11 @@
 'use strict';
 
-export default class ConsonantSet {
-  name: string;
-  C: string;
+import { Set } from './set';
 
+export default class ConsonantSet extends Set {
+  C: string;
   constructor(name: string, C: string) {
-    this.name = name;
+    super(name);
     this.C = C;
   }
 }

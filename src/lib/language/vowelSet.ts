@@ -1,11 +1,12 @@
 'use strict';
 
-export default class VowelSet {
-  name: string;
+import { Set } from './set';
+
+export default class VowelSet extends Set {
   V: string;
 
   constructor(name: string, V: string) {
-    this.name = name;
+    super(name);
     this.V = V;
   }
 }

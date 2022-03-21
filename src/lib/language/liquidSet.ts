@@ -1,11 +1,12 @@
 'use strict';
 
-export default class LiquidSet {
-  name: string;
+import { Set } from './set';
+
+export default class LiquidSet extends Set {
   L: string;
 
   constructor(name: string, L: string) {
-    this.name = name;
+    super(name);
     this.L = L;
   }
 }

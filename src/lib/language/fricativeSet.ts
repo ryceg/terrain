@@ -1,11 +1,11 @@
 'use strict';
 
-export default class FricativeSet {
-  name: string;
-  F: string;
+import { Set } from './set';
 
+export default class FricativeSet extends Set {
+  F: string;
   constructor(name: string, F: string) {
-    this.name = name;
+    super(name);
     this.F = F;
   }
 }

@@ -1,11 +1,12 @@
 'use strict';
 
-export default class RestrictSet {
-  name: string;
+import { Set } from './set';
+
+export default class RestrictSet extends Set {
   res: RegExp[];
 
   constructor(name: string, res: RegExp[]) {
-    this.name = name;
+    super(name);
     this.res = res;
   }
 }
