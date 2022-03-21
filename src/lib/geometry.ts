@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import { voronoi as d3_voronoi } from 'd3-voronoi';
 import random from 'random';
-import { defaultExtent } from './defaultextent';
+import { defaultExtent } from './defaultExtent';
 import type { HInterface } from './hinterface';
 import type Mesh from './mesh';
 import type { Pts } from './pts';

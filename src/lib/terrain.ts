@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
 import random from 'random';
 import type { City } from './city';
-import { defaultExtent } from './defaultextent';
+import { defaultExtent } from './defaultExtent';
 import * as Geometry from "./geometry";
 import type { HInterface } from './hinterface';
 import Mesh from './mesh';
@@ -75,7 +75,7 @@ function makeMesh(pts: Pts, extent = defaultExtent): Mesh {
     if (e.right && !tris[e1].includes(e.right)) tris[e1].push(e.right);
   }
 
-  let mesh = new Mesh();
+  const mesh = new Mesh();
   mesh.pts = pts;
   mesh.vor = vor;
   mesh.vxs = vxs;
@@ -93,7 +93,7 @@ function generateGoodMesh(n: number, extent = defaultExtent) {
 }
 
 function zero(mesh: Mesh): HInterface {
-  let z: HInterface = [] as HInterface;
+  const z: HInterface = [] as HInterface;
   for (let i = 0; i < mesh.vxs.length; i++) {
     z[i] = 0;
   }
@@ -102,7 +102,7 @@ function zero(mesh: Mesh): HInterface {
 }
 
 function map(h: HInterface, f) {
-  let newh: HInterface = h.map(f) as HInterface;
+  const newh: HInterface = h.map(f) as HInterface;
   newh.mesh = h.mesh;
   return newh;
 }
@@ -441,7 +441,7 @@ export function getTerritories(render: RenderData) {
   let n = render.params.nterrs;
   if (n > render.cities.length) n = render.cities.length;
   const flux = getFlux(h);
-  let terr: HInterface = [] as HInterface; // this might be the wrong type, just doing it for now
+  const terr: HInterface = [] as HInterface; // this might be the wrong type, just doing it for now
   const queue = new PriorityQueue({ comparator: function (a, b) { return a.score - b.score } });
   function weight(u, v) {
     const horiz = Geometry.distance(h.mesh, u, v);

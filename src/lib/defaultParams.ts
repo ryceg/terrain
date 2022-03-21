@@ -1,6 +1,6 @@
 "use strict";
 
-import { defaultExtent } from './defaultextent';
+import { defaultExtent } from './defaultExtent';
 import type RenderParams from './renderParams';
 import { generateCoast } from './terrain';
 
