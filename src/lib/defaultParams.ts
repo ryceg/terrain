@@ -1,7 +1,8 @@
 "use strict";
 
+import { defaultExtent } from './defaultextent';
 import type RenderParams from './renderParams';
-import { defaultExtent, generateCoast } from './terrain';
+import { generateCoast } from './terrain';
 
 export const defaultParams: RenderParams = {
   extent: defaultExtent,
