@@ -14,7 +14,7 @@ export default class Mesh {
   extent: Extent;
 
   map(f) {
-    let mapped: any = this.vxs.map(f);
+    const mapped: any = this.vxs.map(f);
     mapped.mesh = this;
     return mapped;
   }

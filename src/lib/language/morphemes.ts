@@ -4,7 +4,7 @@ import * as RND from "../random";
 import type Language from './language';
 import * as Syllables from "./syllables";
 
-export function getMorpheme(lang: Language, key: string = ''): string {
+export function getMorpheme(lang: Language, key = ''): string {
   if (lang.noMorph) {
     return Syllables.makeSyllable(lang);
   }
