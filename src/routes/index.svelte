@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { defaultParams } from '$lib/defaultParams';
-	import { doMap } from '$lib/doMap';
 	import random from 'random';
 	import seedrandom from 'seedrandom';
 	import Map from '../components/Map.svelte';
@@ -9,28 +7,12 @@
 	let seed = inputSeed;
 	random.use(seedrandom(seed));
 
-	let svg = '';
-
 	function generate() {
-		if (inputSeed !== seed) {
-			seed = inputSeed;
-			random.use(seedrandom(seed));
-			doMap(svg, defaultParams);
-		}
+		if (inputSeed !== seed) seed = inputSeed;
 	}
 
 	function generateRandom() {
 		seed = RND.randomString(13);
-		random.use(seedrandom(seed));
-		doMap(svg, defaultParams);
-	}
-
-	function addSVG(div) {
-		return div
-			.insert('svg', ':first-child')
-			.attr('height', 800)
-			.attr('width', 800)
-			.attr('viewBox', '-500 -500 1000 1000');
 	}
 </script>
 
