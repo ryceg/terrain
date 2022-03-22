@@ -23,9 +23,7 @@
 	let svg: Selection<SVGSVGElement, any, any, HTMLElement>;
 
 	onMount(() => {
-		if (browser) {
-			generate(seed);
-		}
+		generate(seed);
 	});
 
 	function generate(newSeed) {
