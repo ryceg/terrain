@@ -8,7 +8,7 @@ import type { HInterface } from './hinterface';
 import type Mesh from './mesh';
 import type { Pts } from './pts';
 
-export const rnorm = (function () {
+export const rnorm: () => number = (function () {
   let z2 = null;
   function rnorm() {
     if (z2 != null) {
@@ -31,7 +31,7 @@ export const rnorm = (function () {
   return rnorm;
 })();
 
-export function centroid(pts: Pts): number[] {
+export function centroid(pts: Pts): [number, number] {
   let x = 0;
   let y = 0;
   for (let i = 0; i < pts.length; i++) {
@@ -47,13 +47,13 @@ export function voronoi(pts: Pts, extent = defaultExtent) {
   return d3_voronoi().extent([[-w, -h], [w, h]])(pts);
 }
 
-export function slope(mesh: Mesh, direction): HInterface {
+export function slope(mesh: Mesh, direction: [number, number]): HInterface {
   return mesh.map(function (x) {
     return x[0] * direction[0] + x[1] * direction[1];
   });
 }
 
-export function cone(mesh: Mesh, slope: number) {
+export function cone(mesh: Mesh, slope: number): Mesh {
   return mesh.map(function (x) {
     return Math.pow(x[0] * x[0] + x[1] * x[1], 0.5) * slope;
   });
@@ -68,17 +68,17 @@ export function neighbors(mesh: Mesh, i: number) {
   return nbs;
 }
 
-export function distance(mesh: Mesh, i: number, j: number) {
+export function distance(mesh: Mesh, i: number, j: number): number {
   const p = mesh.vxs[i];
   const q = mesh.vxs[j];
   return Math.sqrt((p[0] - q[0]) * (p[0] - q[0]) + (p[1] - q[1]) * (p[1] - q[1]));
 }
 
-export function isEdge(mesh: Mesh, i: number) {
+export function isEdge(mesh: Mesh, i: number): boolean {
   return (mesh.adj[i].length < 3);
 }
 
-export function isNearEdge(mesh: Mesh, i: number) {
+export function isNearEdge(mesh: Mesh, i: number): boolean {
   const x = mesh.vxs[i][0];
   const y = mesh.vxs[i][1];
   const w = mesh.extent.width;
@@ -86,11 +86,11 @@ export function isNearEdge(mesh: Mesh, i: number) {
   return x < -0.45 * w || x > 0.45 * w || y < -0.45 * h || y > 0.45 * h;
 }
 
-export function randomVector(scale: number): number[] {
+export function randomVector(scale: number): [number, number] {
   return [scale * rnorm(), scale * rnorm()];
 }
 
-export function quantile(h: HInterface, q) {
+export function quantile(h: HInterface, q: number): number {
   const sortedh = [];
   for (let i = 0; i < h.length; i++) {
     sortedh[i] = h[i];
@@ -103,7 +103,7 @@ export function runif(lo: number, hi: number): number {
   return lo + random.float(0, 1) * (hi - lo);
 }
 
-export function trislope(h: HInterface, i: number) {
+export function trislope(h: HInterface, i: number): [number, number] {
   const nbs = neighbors(h.mesh, i);
   if (nbs.length != 3) return [0, 0];
   const p0 = h.mesh.vxs[nbs[0]];
