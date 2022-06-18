@@ -18,7 +18,7 @@ export function generateCoast(params: RenderParams): HInterface {
   let h = add(
     Geometry.slope(mesh, Geometry.randomVector(4)),
     Geometry.cone(mesh, Geometry.runif(-1, -1)),
-    mountains(mesh, 50)
+    mountains(mesh)
   );
   for (let i = 0; i < 10; i++) {
     h = relax(h);

@@ -3,7 +3,7 @@ import random from 'random';
 import type Mesh from './mesh';
 import { zero } from './zero';
 
-export function mountains(mesh: Mesh, n: number, r = 0.05) {
+export function mountains(mesh: Mesh, n = 50, r = 0.05) {
   const mounts = [];
   for (let i = 0; i < n; i++) {
     mounts.push([mesh.extent.width * (random.float(0, 1) - 0.5), mesh.extent.height * (random.float(0, 1) - 0.5)]);
