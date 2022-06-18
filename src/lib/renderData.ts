@@ -5,8 +5,8 @@ import type { HInterface } from './hinterface';
 import type RenderParams from './renderParams';
 
 export type River = number[][]
-export type Coast = any
-export type Border = any
+export type Coast = number[][]
+export type Border = number[][]
 export interface RenderData {
   cities?: City[]
   rivers?: River
