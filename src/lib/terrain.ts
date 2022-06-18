@@ -14,7 +14,7 @@ import type RenderData from './renderData';
 import type RenderParams from './renderParams';
 import type Voronoi from './voronoi';
 
-function generatePoints(n: number, extent = defaultExtent): number[][] {
+function generatePoints(n: number, extent = defaultExtent): Pts {
   const pts = [];
   for (let i = 0; i < n; i++) {
     pts.push([(random.float(0, 1) - 0.5) * extent.width, (random.float(0, 1) - 0.5) * extent.height]);
@@ -22,7 +22,7 @@ function generatePoints(n: number, extent = defaultExtent): number[][] {
   return pts;
 }
 
-function improvePoints(pts: Pts, n = 1, extent = defaultExtent): number[][] {
+function improvePoints(pts: Pts, n = 1, extent = defaultExtent): Pts {
   for (let i = 0; i < n; i++) {
     pts = Geometry.voronoi(pts, extent)
       .polygons(pts)
@@ -31,7 +31,7 @@ function improvePoints(pts: Pts, n = 1, extent = defaultExtent): number[][] {
   return pts;
 }
 
-function generateGoodPoints(n: number, extent = defaultExtent): number[][] {
+function generateGoodPoints(n: number, extent = defaultExtent): Pts {
   let pts = generatePoints(n, extent);
   pts = pts.sort(function (a, b) {
     return a[0] - b[0];
@@ -114,8 +114,6 @@ function normalize(h: HInterface) {
 }
 
 function peaky(h: HInterface) {
-  // what is the Math.sqrt meant to be? It requires an argument!
-  // Math.sqrt is being passed as a function here, not being called directly. That's why it has no arguments.
   return map(normalize(h), Math.sqrt);
 }
 
@@ -314,9 +312,8 @@ function setSeaLevel(h: HInterface, q: number) {
   return newh;
 }
 
-function cleanCoast(h: HInterface, iters: number) {
+function cleanCoast(h: HInterface, iters = 3) {
   for (let iter = 0; iter < iters; iter++) {
-    let changed = 0; // TODO: is this needed?
     let newh = zero(h.mesh);
     for (let i = 0; i < h.length; i++) {
       newh[i] = h[i];
@@ -333,7 +330,6 @@ function cleanCoast(h: HInterface, iters: number) {
       }
       if (count > 1) continue;
       newh[i] = best / 2;
-      changed++;
     }
     h = newh;
     newh = zero(h.mesh);
@@ -352,7 +348,6 @@ function cleanCoast(h: HInterface, iters: number) {
       }
       if (count > 1) continue;
       newh[i] = best / 2;
-      changed++;
     }
     h = newh;
   }
@@ -411,7 +406,7 @@ export function contour(h: HInterface, level = 0) {
   return mergeSegments(edges);
 }
 
-export function getRivers(h: HInterface, limit: number) {
+export function getRivers(h: HInterface, limit: number): number[][] {
   const dh = downhill(h);
   const flux = getFlux(h);
   const links = [];
@@ -586,11 +581,11 @@ export function generateCoast(params: RenderParams): HInterface {
   h = doErosion(h, Geometry.runif(0, 0.1), 5);
   h = setSeaLevel(h, Geometry.runif(0.2, 0.6));
   h = fillSinks(h);
-  h = cleanCoast(h, 3);
+  h = cleanCoast(h);
   return h;
 }
 
-export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean): number[] {
+export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean): [number, number] {
   let x = 0;
   let y = 0;
   let n = 0;
