@@ -5,9 +5,10 @@ import type { HInterface } from './hinterface';
 import Label from './label';
 import * as Languages from "./language/languages";
 import type RenderData from "./renderData";
+import type { Border, Coast, River } from './renderData';
 import { terrCenter } from './terrain';
 
-function penalty(label, labels, h: HInterface, cities: City[], avoids: any[]): number {
+function penalty(label: Label, labels: Label[], h: HInterface, cities: City[], avoids: [River, Coast, Border]): number {
   let pen = 0;
   if (label.x0 < -0.45 * h.mesh.extent.width)
     pen += 100;
@@ -53,7 +54,7 @@ export function drawLabels(svg, render: RenderData) {
   const terr = render.terr;
   const cities = render.cities;
   const nterrs = render.params.nterrs;
-  const avoids = [render.rivers, render.coasts, render.borders];
+  const avoids: [River, Coast, Border] = [render.rivers, render.coasts, render.borders];
   const lang = Languages.makeRandomLanguage();
   const cityLabels = [];
 
