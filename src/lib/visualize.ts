@@ -8,7 +8,7 @@ import * as getBorders from "./getBorders";
 import * as getRivers from "./getRivers";
 import type { HInterface } from './hinterface';
 import type { Pts } from './pts';
-import type RenderData from './renderData';
+import type { RenderData } from './renderData';
 
 export function visualizeBorders(svg, render: RenderData) {
   const links = getBorders.getBorders(render);

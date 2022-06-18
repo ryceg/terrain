@@ -1,6 +1,6 @@
 'use strict';
 import { cityScore } from './cityScore';
-import RenderData from './renderData';
+import type { RenderData } from './renderData';
 
 export function placeCity(render: RenderData) {
   render.cities = render.cities || [];

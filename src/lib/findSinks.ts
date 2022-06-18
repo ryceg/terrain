@@ -3,7 +3,7 @@ import { downhill } from './downhill';
 import * as Geometry from "./geometry";
 import type { HInterface } from './hinterface';
 
-function findSinks(h: HInterface) {
+export function findSinks(h: HInterface) {
   const dh = downhill(h);
   const sinks = [];
   for (let i = 0; i < dh.length; i++) {

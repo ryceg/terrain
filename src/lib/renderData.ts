@@ -7,7 +7,7 @@ import type RenderParams from './renderParams';
 export type River = number[][]
 export type Coast = any
 export type Border = any
-export default interface RenderData {
+export interface RenderData {
   cities?: City[]
   rivers?: River
   coasts?: Coast

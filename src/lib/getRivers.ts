@@ -5,9 +5,10 @@ import { getFlux } from './getFlux';
 import type { HInterface } from './hinterface';
 import { mergeSegments } from "./mergeSegments";
 import { relaxPath } from "./relaxPath";
+import type { River } from './renderData';
 
 
-export function getRivers(h: HInterface, limit: number): number[][] {
+export function getRivers(h: HInterface, limit: number): River {
   const dh = downhill(h);
   const flux = getFlux(h);
   const links = [];

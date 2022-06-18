@@ -9,7 +9,7 @@ import type { HInterface } from './hinterface';
 import { mountains } from './mountains';
 import { peaky } from './peaky';
 import { relax } from './relax';
-import RenderParams from './renderParams';
+import type RenderParams from './renderParams';
 import { setSeaLevel } from './setSeaLevel';
 
 

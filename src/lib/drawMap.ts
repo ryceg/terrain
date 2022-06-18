@@ -6,7 +6,7 @@ import { drawLabels } from "./drawLabels";
 import * as getBorders from "./getBorders";
 import * as getRivers from "./getRivers";
 import * as getTerritories from "./getTerritories";
-import type RenderData from './renderData';
+import type { RenderData } from './renderData';
 import * as Visualize from "./visualize";
 
 export function drawMap(svg, render: RenderData) {

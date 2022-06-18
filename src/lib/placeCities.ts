@@ -1,6 +1,6 @@
 'use strict';
 import { placeCity } from './placeCity';
-import RenderData from './renderData';
+import type { RenderData } from './renderData';
 
 
 export function placeCities(render: RenderData) {
