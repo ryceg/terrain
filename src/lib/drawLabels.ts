@@ -4,8 +4,7 @@ import type { City } from './city';
 import type { HInterface } from './hinterface';
 import Label from './label';
 import * as Languages from "./language/languages";
-import type RenderData from "./renderData";
-import type { Border, Coast, River } from './renderData';
+import type { Border, Coast, RenderData, River } from "./renderData";
 import { terrCenter } from "./terrCenter";
 
 function penalty(label: Label, labels: Label[], h: HInterface, cities: City[], avoids: [River, Coast, Border]): number {
@@ -138,7 +137,7 @@ export function drawLabels(svg, render: RenderData) {
       const v = h.mesh.vxs[j];
       score -= 3000 * Math.sqrt((v[0] - lc[0]) * (v[0] - lc[0]) + (v[1] - lc[1]) * (v[1] - lc[1]));
       score -= 1000 * Math.sqrt((v[0] - oc[0]) * (v[0] - oc[0]) + (v[1] - oc[1]) * (v[1] - oc[1]));
-      if (terr[j] != city)
+      if (terr[j] !== city)
         score -= 3000;
       for (let k = 0; k < cities.length; k++) {
         const u = h.mesh.vxs[cities[k]];

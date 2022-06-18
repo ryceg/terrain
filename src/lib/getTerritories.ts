@@ -3,8 +3,7 @@ import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
 import * as Geometry from "./geometry";
 import { getFlux } from './getFlux';
 import type { HInterface } from './hinterface';
-import RenderData from './renderData';
-
+import type { RenderData } from './renderData';
 
 export function getTerritories(render: RenderData) {
   const h = render.h;
@@ -24,7 +23,7 @@ export function getTerritories(render: RenderData) {
     diff += 100 * Math.sqrt(flux[u]);
     if (h[u] <= 0)
       diff = 100;
-    if ((h[u] > 0) != (h[v] > 0))
+    if ((h[u] > 0) !== (h[v] > 0))
       return 1000;
     return horiz * diff;
   }
@@ -41,13 +40,13 @@ export function getTerritories(render: RenderData) {
   }
   while (queue.length) {
     const u = queue.dequeue();
-    if (terr[u.vx] != undefined)
+    if (terr[u.vx] !== undefined)
       continue;
     terr[u.vx] = u.city;
     const nbs = Geometry.neighbors(h.mesh, u.vx);
     for (let i = 0; i < nbs.length; i++) {
       const v = nbs[i];
-      if (terr[v] != undefined)
+      if (terr[v] !== undefined)
         continue;
       const newdist = weight(u.vx, v);
       queue.queue({

@@ -86,7 +86,7 @@ export function makeName(lang: Language, key = '') {
     let used = false;
     for (let i = 0; i < lang.names.length; i++) {
       const name2 = lang.names[i];
-      if (name.indexOf(name2) != -1 || name2.indexOf(name) != -1) {
+      if (name.indexOf(name2) !== -1 || name2.indexOf(name) !== -1) {
         used = true;
         break;
       }

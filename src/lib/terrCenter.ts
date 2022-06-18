@@ -8,7 +8,7 @@ export function terrCenter(h: HInterface, terr, city: City, landOnly: boolean): 
   let y = 0;
   let n = 0;
   for (let i = 0; i < terr.length; i++) {
-    if (terr[i] != city)
+    if (terr[i] !== city)
       continue;
     if (landOnly && h[i] <= 0)
       continue;

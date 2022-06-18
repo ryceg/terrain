@@ -9,7 +9,7 @@ export function cleanCoast(h: HInterface, iters = 3) {
     for (let i = 0; i < h.length; i++) {
       newh[i] = h[i];
       const nbs = Geometry.neighbors(h.mesh, i);
-      if (h[i] <= 0 || nbs.length != 3)
+      if (h[i] <= 0 || nbs.length !== 3)
         continue;
       let count = 0;
       let best = -999999;
@@ -29,7 +29,7 @@ export function cleanCoast(h: HInterface, iters = 3) {
     for (let i = 0; i < h.length; i++) {
       newh[i] = h[i];
       const nbs = Geometry.neighbors(h.mesh, i);
-      if (h[i] > 0 || nbs.length != 3)
+      if (h[i] > 0 || nbs.length !== 3)
         continue;
       let count = 0;
       let best = 999999;

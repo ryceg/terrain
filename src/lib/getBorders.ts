@@ -2,10 +2,10 @@
 import * as Geometry from "./geometry";
 import { mergeSegments } from "./mergeSegments";
 import { relaxPath } from "./relaxPath";
-import type RenderData from './renderData';
+import type { Border, RenderData } from './renderData';
 
 
-export function getBorders(render: RenderData) {
+export function getBorders(render: RenderData): Border {
   const terr = render.terr;
   const h = render.h;
   const edges = [];
@@ -17,7 +17,7 @@ export function getBorders(render: RenderData) {
       continue;
     if (h[e[0]] < 0 || h[e[1]] < 0)
       continue;
-    if (terr[e[0]] != terr[e[1]]) {
+    if (terr[e[0]] !== terr[e[1]]) {
       edges.push([e[2], e[3]]);
     }
   }

@@ -11,7 +11,7 @@ import type { Pts } from './pts';
 export const rnorm: () => number = (function () {
   let z2 = null;
   function rnorm() {
-    if (z2 != null) {
+    if (z2 !== null) {
       const tmp = z2;
       z2 = null;
       return tmp;
@@ -105,7 +105,7 @@ export function runif(lo: number, hi: number): number {
 
 export function trislope(h: HInterface, i: number): [number, number] {
   const nbs = neighbors(h.mesh, i);
-  if (nbs.length != 3) return [0, 0];
+  if (nbs.length !== 3) return [0, 0];
   const p0 = h.mesh.vxs[nbs[0]];
   const p1 = h.mesh.vxs[nbs[1]];
   const p2 = h.mesh.vxs[nbs[2]];
