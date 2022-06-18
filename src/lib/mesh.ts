@@ -18,4 +18,13 @@ export default class Mesh {
     mapped.mesh = this;
     return mapped;
   }
+  constructor(pts: Pts, extent: Extent, vor: Voronoi, vxs: number[], adj: number[][], tris: number[][], edges: number[][]) {
+    this.pts = pts;
+    this.vor = vor;
+    this.vxs = vxs;
+    this.adj = adj;
+    this.tris = tris;
+    this.edges = edges;
+    this.extent = extent;
+  }
 }

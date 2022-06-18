@@ -46,14 +46,7 @@ export function makeMesh(pts: Pts, extent = defaultExtent): Mesh {
       tris[e1].push(e.right);
   }
 
-  const mesh = new Mesh();
-  mesh.pts = pts;
-  mesh.vor = vor;
-  mesh.vxs = vxs;
-  mesh.adj = adj;
-  mesh.tris = tris;
-  mesh.edges = edges;
-  mesh.extent = extent;
+  const mesh = new Mesh(pts, extent, vor, vxs, adj, tris, edges);
 
   return mesh;
 }
