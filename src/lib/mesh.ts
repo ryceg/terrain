@@ -12,7 +12,7 @@ export default class Mesh {
   tris: number[][];
   edges: number[][];
   extent: Extent;
-
+  // I really don't like using the word `map` to refer to something other than the array method.
   map(f) {
     const mapped: any = this.vxs.map(f);
     mapped.mesh = this;

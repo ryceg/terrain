@@ -6,7 +6,7 @@ import Label from './label';
 import * as Languages from "./language/languages";
 import type RenderData from "./renderData";
 import type { Border, Coast, River } from './renderData';
-import { terrCenter } from './terrain';
+import { terrCenter } from "./terrCenter";
 
 function penalty(label: Label, labels: Label[], h: HInterface, cities: City[], avoids: [River, Coast, Border]): number {
   let pen = 0;

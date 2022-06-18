@@ -1,15 +1,17 @@
 'use strict';
 
 import * as d3 from "d3";
+import * as contour from "./contour";
 import * as Draw from "./draw";
 import * as Geometry from "./geometry";
+import * as getBorders from "./getBorders";
+import * as getRivers from "./getRivers";
 import type { HInterface } from './hinterface';
 import type { Pts } from './pts';
 import type RenderData from './renderData';
-import * as Terrain from "./terrain";
 
 export function visualizeBorders(svg, render: RenderData) {
-  const links = Terrain.getBorders(render);
+  const links = getBorders.getBorders(render);
   Draw.drawPaths(svg, 'border', links);
 }
 
@@ -36,12 +38,12 @@ export function visualizeCities(svg, render: RenderData) {
 }
 
 export function visualizeContour(svg, h: HInterface, level = 0) {
-  const links = Terrain.contour(h, level);
+  const links = contour.contour(h, level);
   Draw.drawPaths(svg, 'coast', links);
 }
 
 export function visualizeDownhill(svg, h: HInterface) {
-  const links = Terrain.getRivers(h, 0.01);
+  const links = getRivers.getRivers(h, 0.01);
   Draw.drawPaths(svg, 'river', links);
 }
 

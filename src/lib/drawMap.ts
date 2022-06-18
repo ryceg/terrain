@@ -1,16 +1,19 @@
 "use strict";
 
+import * as contour from "./contour";
 import * as Draw from "./draw";
 import { drawLabels } from "./drawLabels";
+import * as getBorders from "./getBorders";
+import * as getRivers from "./getRivers";
+import * as getTerritories from "./getTerritories";
 import type RenderData from './renderData';
-import * as Terrain from './terrain';
 import * as Visualize from "./visualize";
 
 export function drawMap(svg, render: RenderData) {
-  render.rivers = Terrain.getRivers(render.h, 0.01);
-  render.coasts = Terrain.contour(render.h, 0);
-  render.terr = Terrain.getTerritories(render);
-  render.borders = Terrain.getBorders(render);
+  render.rivers = getRivers.getRivers(render.h, 0.01);
+  render.coasts = contour.contour(render.h, 0);
+  render.terr = getTerritories.getTerritories(render);
+  render.borders = getBorders.getBorders(render);
 
   Draw.drawPaths(svg, 'river', render.rivers);
   Draw.drawPaths(svg, 'coast', render.coasts);
