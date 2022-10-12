@@ -1,8 +1,8 @@
 'use strict';
-import { BinaryHeapStrategy as PriorityQueue } from 'js-priority-queue';
 import * as Geometry from "./geometry";
 import { getFlux } from './getFlux';
 import type { HInterface } from './hinterface';
+import { BinaryHeapStrategy as PriorityQueue } from './priority-queue';
 import type { RenderData } from './renderData';
 
 export function getTerritories(render: RenderData) {
