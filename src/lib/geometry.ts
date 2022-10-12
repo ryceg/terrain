@@ -2,7 +2,6 @@
 
 import * as d3 from "d3";
 import { voronoi as d3_voronoi } from 'd3-voronoi';
-import random from 'random';
 import { defaultExtent } from './defaultExtent';
 import type { HInterface } from './hinterface';
 import type Mesh from './mesh';
@@ -100,7 +99,7 @@ export function quantile(h: HInterface, q: number): number {
 }
 
 export function runif(lo: number, hi: number): number {
-  return lo + random.float(0, 1) * (hi - lo);
+  return lo + Math.random() * (hi - lo);
 }
 
 export function trislope(h: HInterface, i: number): [number, number] {

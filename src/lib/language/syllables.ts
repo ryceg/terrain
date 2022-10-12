@@ -1,6 +1,5 @@
 'use strict';
 
-import random from 'random';
 import * as RND from "../random";
 import type Language from './language';
 import * as Words from "./words";
@@ -39,7 +38,7 @@ export function makeSyllable(lang: Language): string {
       const phonemeType = lang.structure[i];
       if (lang.structure[i + 1] === '?') {
         i++;
-        if (random.float(0, 1) < 0.5) {
+        if (Math.random() < 0.5) {
           continue;
         }
       }

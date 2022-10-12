@@ -1,6 +1,5 @@
 'use strict';
 
-import random from 'random';
 import * as RND from "../random";
 import * as ConsonantOrthographies from "./consonantOrthographies";
 import * as ConsonantSets from "./consonantSets";
@@ -64,20 +63,20 @@ export function makeName(lang: Language, key = '') {
   lang.definite = lang.definite || Morphemes.getMorpheme(lang, 'the');
   while (true) {
     let name = null;
-    if (random.float(0, 1) < 0.5) {
+    if (Math.random() < 0.5) {
       name = Transformation.capitalize(Words.getWord(lang, key));
     } else {
-      const w1 = Transformation.capitalize(Words.getWord(lang, random.float(0, 1) < 0.6 ? key : ''));
-      const w2 = Transformation.capitalize(Words.getWord(lang, random.float(0, 1) < 0.6 ? key : ''));
+      const w1 = Transformation.capitalize(Words.getWord(lang, Math.random() < 0.6 ? key : ''));
+      const w2 = Transformation.capitalize(Words.getWord(lang, Math.random() < 0.6 ? key : ''));
       if (w1 === w2)
         continue;
-      if (random.float(0, 1) > 0.5) {
+      if (Math.random() > 0.5) {
         name = Transformation.join([w1, w2], lang.joiner);
       } else {
         name = Transformation.join([w1, lang.genitive, w2], lang.joiner);
       }
     }
-    if (random.float(0, 1) < 0.1) {
+    if (Math.random() < 0.1) {
       name = Transformation.join([lang.definite, name], lang.joiner);
     }
 
