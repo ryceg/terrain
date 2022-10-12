@@ -1,7 +1,9 @@
 'use strict';
+import type { HInterface } from './hinterface';
+import type Mesh from './mesh';
 import { zero } from './zero';
 
-export function add(...args) {
+export function add(...args: [HInterface, Mesh, HInterface]) {
   const n = args[0].length;
   const newvals = zero(args[0].mesh);
   for (let i = 0; i < n; i++) {

@@ -6,7 +6,7 @@ export function downhill(h: HInterface) {
   if (h.downhill)
     return h.downhill;
 
-  function downfrom(i): number | number[] {
+  function downfrom(i: number): number | number[] {
     if (Geometry.isEdge(h.mesh, i))
       return -2; // this is clearly meant to be an error code
     let best = -1; // this is another error code
