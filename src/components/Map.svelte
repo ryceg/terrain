@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { browser } from '$app/env';
+	import { browser } from '$app/environment';
 	import { defaultParams } from '$lib/defaultParams';
 	import { doMap } from '$lib/doMap';
 	import { getTextArrayFromQuery } from '$lib/getTextArrayFromQuery';
