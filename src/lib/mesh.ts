@@ -46,7 +46,7 @@ export default class Mesh {
   @note I really don't like using the word `map` to refer to something other than the array method.
   */
 	map(f) {
-		const mapped: any = this.vxs.map(f);
+		const mapped = this.vxs.map(f);
 		mapped.mesh = this;
 		return mapped;
 	}

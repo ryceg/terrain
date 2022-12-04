@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { contour } from '$lib/contour';
+	import { defaultExtent } from '$lib/defaultExtent';
 	import { defaultParams } from '$lib/defaultParams';
 	import { doMap } from '$lib/doMap';
+	import { drawPaths } from '$lib/draw';
+	import { generateCoast } from '$lib/generateCoast';
+	import { getBorders } from '$lib/getBorders';
+	import { getRivers } from '$lib/getRivers';
+	import { getTerritories } from '$lib/getTerritories';
 	import { getTextArrayFromQuery } from '$lib/getTextArrayFromQuery';
 	import { cityNames, regionNames } from '$lib/stores/regionNames';
+	import { visualizeCities, visualizeSlopes } from '$lib/visualize';
 	import type { Selection } from 'd3';
 	import * as d3 from 'd3';
 	import random from 'random';
@@ -30,7 +38,34 @@
 		random.use(seedrandom(newSeed));
 		if (!container) container = d3.select('div#container');
 		if (!svg) svg = addSVG(container);
+
+		// // works
+		// const primH = zero(generateGoodMesh(4096));
+		// visualizeVoronoi(svg, primH, -1, 1);
+		// drawPaths(svg, 'coast', contour(primH, 0));
+
+		// works
+		const cityRender = {
+			params: defaultParams,
+			cities: [],
+			h: generateCoast({ npts: 4096, extent: defaultExtent })
+		};
+
+		cityRender.terr = getTerritories(cityRender);
+
+		drawPaths(svg, 'coast', contour(cityRender.h, 0));
+		drawPaths(svg, 'river', getRivers(cityRender.h, 0.01));
+		drawPaths(svg, 'border', getBorders(cityRender));
+		visualizeSlopes(svg, cityRender);
+		visualizeCities(svg, cityRender);
+		// visualizeVoronoi(svg, physH, -1, 1);
+
 		doMap(svg, defaultParams);
+
+		// const physH = generateCoast({ npts: 4096, extent: defaultExtent });
+		// visualizeVoronoi(svg, physH, -1, 1);
+		// drawPaths(svg, 'coast', contour(physH, 0));
+		// drawPaths(svg, 'coast', []);
 		loading = !loading;
 		// convert HTML collection to an array of the region names
 		$regionNames = getTextArrayFromQuery('.region');

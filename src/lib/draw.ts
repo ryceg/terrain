@@ -5,7 +5,7 @@ import * as d3 from 'd3';
  * makeD3Path - construct path connecting a set of points
  *	start at first point, draw line to each subsequent point
  *
- * @param	list of <x,y> coordinates
+ * @param path - list of <x,y> coordinates
  * @return	string representation of connecting path
  */
 export function makeD3Path(path) {
@@ -24,10 +24,16 @@ export function makeD3Path(path) {
  * @param	list of <x,y> coordinates
  */
 export function drawPaths(svg, cls: string, paths) {
+	console.log(svg, cls, paths);
 	// remove all existing paths from the SVG
 	paths = svg.selectAll('path.' + cls).data(paths);
 	paths.enter().append('path').classed(cls, true);
 	paths.exit().remove();
 	// draw line along the connecting path
-	svg.selectAll('path.' + cls).attr('d', makeD3Path);
+	svg
+		.selectAll('path.' + cls)
+		.attr('d', makeD3Path)
+		.attr('stroke', 'black')
+		.attr('stroke-width', 1)
+		.attr('fill', 'none');
 }

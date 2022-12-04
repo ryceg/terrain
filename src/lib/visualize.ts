@@ -103,10 +103,12 @@ export function visualizePoints(svg, pts: Pts) {
 		.attr('r', 100 / Math.sqrt(pts.length));
 }
 
-export function visualizeSlopes(svg, render: RenderData) {
-	const h = render.h;
+export function visualizeSlopes(svg, h: HInterface) {
 	const strokes = [];
 	const r = 0.25 / Math.sqrt(h.length);
+	console.log('visualise slopes');
+	console.log({ h });
+	console.log(h.length);
 	for (let i = 0; i < h.length; i++) {
 		if (h[i] <= 0 || Geometry.isNearEdge(h.mesh, i)) continue;
 		const nbs = Geometry.neighbors(h.mesh, i);
