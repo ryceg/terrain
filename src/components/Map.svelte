@@ -94,7 +94,6 @@
 	.isLoaded {
 		animation: ease-in fade-in 3s;
 	}
-
 	@keyframes fade-in {
 		from {
 			opacity: 0;
